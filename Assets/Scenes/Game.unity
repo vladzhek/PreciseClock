@@ -862,12 +862,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76130c1617b34bd89a6fbdd147ad3e24, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hourHand: {fileID: 1312350161}
-  minuteHand: {fileID: 1788481471}
-  secondHand: {fileID: 1819854708}
-  timeText: {fileID: 873987399}
-  EditButton: {fileID: 61855023}
-  timeEditManager: {fileID: 1795229598}
+  _hourHand: {fileID: 1312350161}
+  _minuteHand: {fileID: 1788481471}
+  _secondHand: {fileID: 1819854708}
+  _timeText: {fileID: 873987399}
+  _editButton: {fileID: 61855023}
+  _timeEditManager: {fileID: 1795229598}
 --- !u!1 &873987397
 GameObject:
   m_ObjectHideFlags: 0
@@ -1551,8 +1551,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 58a79181f9bc49ac8d2d8e6cb8a6299e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _hourHand: {fileID: 0}
-  _minuteHand: {fileID: 0}
 --- !u!1 &1415134539
 GameObject:
   m_ObjectHideFlags: 0
@@ -2863,7 +2861,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1795229594
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2941,9 +2939,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ebb3981b41549bf97ad7761a25ed45f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hourInputField: {fileID: 1788500874}
-  minuteInputField: {fileID: 282459685}
-  secondInputField: {fileID: 1990756006}
+  _hourInputField: {fileID: 1788500874}
+  _minuteInputField: {fileID: 282459685}
+  _secondInputField: {fileID: 1990756006}
   saveButton: {fileID: 14252407}
   timeManager: {fileID: 532530151}
 --- !u!1 &1819854707

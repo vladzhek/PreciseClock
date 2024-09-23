@@ -7,34 +7,42 @@ namespace TimeClock
 {
     public class TimeEditManager : MonoBehaviour
     {
-        public TMP_InputField hourInputField;
-        public TMP_InputField minuteInputField;
-        public TMP_InputField secondInputField;
-        public Button saveButton;
-        
-        public TimeManager timeManager;
+        [SerializeField] private TMP_InputField _hourInputField;
+        [SerializeField] private TMP_InputField _minuteInputField;
+        [SerializeField] private TMP_InputField _secondInputField;
+        [SerializeField] private Button saveButton;
+        [SerializeField] private TimeManager timeManager;
 
         private DateTime currentTime;
 
-        public void Start()
+        private void OnEnable()
         {
-            gameObject.SetActive(false);
             saveButton.onClick.AddListener(SaveTimeFromInput);
         }
 
-        private void UpdateInputs(DateTime time)
+        private void OnDisable()
         {
-            hourInputField.text = time.Hour.ToString();
-            minuteInputField.text = time.Minute.ToString();
-            secondInputField.text = time.Second.ToString();
+            saveButton.onClick.RemoveListener(SaveTimeFromInput);
+        }
+
+        private void SetActiveEdit(bool isActive)
+        {
+            gameObject.SetActive(isActive);
         }
 
         public void EnterEditMode()
         {
-            gameObject.SetActive(true);
+            SetActiveEdit(true);
             
             currentTime = timeManager.GetTime();
             UpdateInputs(currentTime);
+        }
+        
+        private void UpdateInputs(DateTime time)
+        {
+            _hourInputField.text = time.Hour.ToString();
+            _minuteInputField.text = time.Minute.ToString();
+            _secondInputField.text = time.Second.ToString();
         }
 
         public void ExitEditMode()
@@ -43,11 +51,11 @@ namespace TimeClock
             timeManager.SetTime(currentTime);
         }
 
-        public void SaveTimeFromInput()
+        private void SaveTimeFromInput()
         {
-            if (int.TryParse(hourInputField.text, out int newHour) &&
-                int.TryParse(minuteInputField.text, out int newMinute) &&
-                int.TryParse(secondInputField.text, out int newSecond))
+            if (int.TryParse(_hourInputField.text, out int newHour) &&
+                int.TryParse(_minuteInputField.text, out int newMinute) &&
+                int.TryParse(_secondInputField.text, out int newSecond))
             {
                 if (newHour >= 0 && newHour < 24 && newMinute >= 0 && newMinute < 60 && newSecond >= 0 && newSecond < 60)
                 {

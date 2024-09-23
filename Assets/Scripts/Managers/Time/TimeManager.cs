@@ -8,30 +8,39 @@ namespace TimeClock
 {
     public class TimeManager : MonoBehaviour
     {
-        public RectTransform  hourHand;
-        public RectTransform  minuteHand;
-        public RectTransform  secondHand;
-        public TextMeshProUGUI timeText;
-        public Button EditButton;
+        [SerializeField] private RectTransform  _hourHand;
+        [SerializeField] private RectTransform  _minuteHand;
+        [SerializeField] private RectTransform  _secondHand;
+        [SerializeField] private TextMeshProUGUI _timeText;
+        [SerializeField] private Button _editButton;
+        [SerializeField] private TimeEditManager _timeEditManager;
 
-        private DateTime currentTime;
-        private int lastUpdateHour = -1;
+        private DateTime _currentTime;
+        private int _lastUpdateHour = -1;
         private bool _isEdit = false;
         
-        private ITimeService timeService;
-        public TimeEditManager timeEditManager;
+        private ITimeService _timeService;
+
+        private void OnEnable()
+        {
+            _editButton.onClick.AddListener(_timeEditManager.EnterEditMode);
+        }
+
+        private void OnDisable()
+        {
+            _editButton.onClick.RemoveListener(_timeEditManager.EnterEditMode);
+        }
 
         void Start()
         {
-            timeService = new YandexTimeService();
+            _timeService = new YandexTimeService();
             GetTimeFromServerAsync().Forget();
-            EditButton.onClick.AddListener(timeEditManager.EnterEditMode);
         }
 
         private async UniTaskVoid GetTimeFromServerAsync()
         {
-            currentTime = await timeService.GetTimeFromServerAsync();
-            if (currentTime == DateTime.MinValue)
+            _currentTime = await _timeService.GetTimeFromServerAsync();
+            if (_currentTime == DateTime.MinValue)
             {
                 Debug.LogError("Не удалось получить время с сервера.");
                 return;
@@ -40,22 +49,22 @@ namespace TimeClock
 
         void Update()
         {
-            currentTime = currentTime.AddSeconds(Time.deltaTime);
+            _currentTime = _currentTime.AddSeconds(Time.deltaTime);
             UpdateClock();
         }
 
         void UpdateClock()
         {
-            if (currentTime == null) return;
+            if (_currentTime == null) return;
 
-            hourHand.localRotation = Quaternion.Euler(0, 0, -((currentTime.Hour % 12) + currentTime.Minute / 60f) * 30f);
-            minuteHand.localRotation = Quaternion.Euler(0, 0, -(currentTime.Minute + currentTime.Second / 60f) * 6f);
-            secondHand.localRotation = Quaternion.Euler(0, 0, -(currentTime.Second * 6f));
+            _hourHand.localRotation = Quaternion.Euler(0, 0, -((_currentTime.Hour % 12) + _currentTime.Minute / 60f) * 30f);
+            _minuteHand.localRotation = Quaternion.Euler(0, 0, -(_currentTime.Minute + _currentTime.Second / 60f) * 6f);
+            _secondHand.localRotation = Quaternion.Euler(0, 0, -(_currentTime.Second * 6f));
             
-            timeText.text = currentTime.ToString("HH:mm:ss");
-            if (currentTime.Hour != lastUpdateHour && !_isEdit)
+            _timeText.text = _currentTime.ToString("HH:mm:ss");
+            if (_currentTime.Hour != _lastUpdateHour && !_isEdit)
             {
-                lastUpdateHour = currentTime.Hour;
+                _lastUpdateHour = _currentTime.Hour;
                 GetTimeFromServerAsync().Forget();
             }
         }
@@ -63,12 +72,12 @@ namespace TimeClock
         public void SetTime(DateTime newTime)
         {
             _isEdit = true;
-            currentTime = newTime;
+            _currentTime = newTime;
         }
 
         public DateTime GetTime()
         {
-            return currentTime;
+            return _currentTime;
         }
     }
 }
